@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 {
     int tnum = omp_get_num_threads();
 
-    Mat img = imread("me.jpg", IMREAD_ANYCOLOR);
+    Mat img = imread(argv[1], IMREAD_ANYCOLOR);
 
     if (img.empty())
     {
@@ -29,7 +29,8 @@ int main(int argc, char *argv[])
 
     Mat newlbpImg = Mat::zeros(hsvimg.rows, hsvimg.cols, CV_32FC3);
 
-#pragma omp parallel for collapse(2)
+    auto start_time = std::chrono::high_resolution_clock::now();
+
     for (int i = 1; i < newlbpImg.rows; i++)
     {
         for (int j = 1; j < newlbpImg.cols; j++)
@@ -39,6 +40,11 @@ int main(int argc, char *argv[])
             edlbp(hsvimg, newlbpImg, 2, i, j);
         }
     }
+    auto end_time = std::chrono::high_resolution_clock::now();
+
+    auto total_time = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
+
+    cout << total_time.count() << endl;
 
     imwrite("./output/newlbpImg.jpg", newlbpImg);
 }

@@ -15,3 +15,8 @@ opencvTest
 .cmake/
 .vscode/
 *.out
+img/
+result*
+*.jpeg
+*.jpg
+*.png
